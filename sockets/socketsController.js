@@ -10,6 +10,7 @@ export  const socketsController = async (client) =>{
     client.emit("sendProducts", productos)
 
     client.on("sendMensaje", data =>{
+        console.log(data)
         mensajes.push(data)
         fs.writeFileSync("./db/mensajes.json", JSON.stringify(mensajes))
         client.broadcast.emit("MensajesAlBrowser", mensajes)

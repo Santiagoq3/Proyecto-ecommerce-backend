@@ -49,10 +49,15 @@ btnChat.addEventListener("click", function(e){
     if(inputEmail.value.length < 5){
         throw new Error("el email es necesario")
     }
-
+    let hoy = new Date();
+    let hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
+    let fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear();
     const mensajes = {
         inputEmail: inputEmail.value,
-        inputMensaje: inputMensaje.value
+        inputMensaje: inputMensaje.value,
+        hora: hora,
+        fecha: fecha
+
     }
     
     socketClient.emit("sendMensaje", mensajes )
