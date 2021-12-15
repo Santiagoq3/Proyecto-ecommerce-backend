@@ -1,12 +1,48 @@
 
 const socketClient = io()
+
 const btnPOST = document.querySelector(".btnPOST")
 const btnChat = document.querySelector(".btnChat")
-
 
 const form = document.querySelector(".formProducto")
 
 console.log("hola mundo")
+
+function renderizarProducto (producto){
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+
+    <div class="producto">
+        <p>${producto.id}</p>
+        <p>${producto.title}</p>
+        <p>${producto.price}</p>
+       
+    </div>
+
+    `
+    const allProducts = document.querySelector(".allProducts");
+
+    allProducts.append(div);
+
+}
+function renderizarMensaje(mensaje){
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+
+    <div class="mensajes">
+        <p class="mensajes__email">${mensaje.email} <span>[${mensaje.created_at}]</span></p>
+        <p class="mensajes__mensaje">dice:${mensaje.mensaje}</p>
+    </div>
+
+
+    `
+    const chat = document.querySelector(".chat");
+
+    chat.append(div);
+
+}
 
 btnPOST.addEventListener("click", function(e){
 
@@ -16,11 +52,11 @@ btnPOST.addEventListener("click", function(e){
 
     let data = new FormData(form)
     let title=data.get('title');
-    let precio=data.get('precio');
+    let price=data.get('price');
     let thumbnail=data.get('thumbnail')
     let sendObject={
         title,
-        precio,
+        price,
         thumbnail
     }
     fetch(url,{
@@ -34,7 +70,11 @@ btnPOST.addEventListener("click", function(e){
         return res.json()
     })
     .then((data)=>{
-        console.log(data)
+        console.log("xd",data)
+        socketClient.emit("sendProducts", sendObject, function(){
+
+            renderizarProducto(sendObject);
+        } )
     })
     .catch((err)=>{
         console.log(err)
@@ -42,6 +82,7 @@ btnPOST.addEventListener("click", function(e){
 })
 
 btnChat.addEventListener("click", function(e){
+
     e.preventDefault()
     const inputEmail = document.querySelector(".inputEmail")
     const inputMensaje = document.querySelector(".inputMensaje")
@@ -49,23 +90,25 @@ btnChat.addEventListener("click", function(e){
     if(inputEmail.value.length < 5){
         throw new Error("el email es necesario")
     }
-    let hoy = new Date();
-    let hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-    let fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear();
+
     const mensajes = {
-        inputEmail: inputEmail.value,
-        inputMensaje: inputMensaje.value,
-        hora: hora,
-        fecha: fecha
+        email: inputEmail.value,
+        mensaje: inputMensaje.value,
+        
 
     }
     
-    socketClient.emit("sendMensaje", mensajes )
+    socketClient.emit("sendMensaje", mensajes, function(){
+        renderizarMensaje(mensajes)
+
+    } )
 
 })
 
-socketClient.on("sendProducts", data=>{
-    console.log(data)
+
+
+socketClient.on("productosAlBrowser", data=>{
+
     fetch('templates/allProducts.handlebars')
     .then(string => string.text())
     .then(template =>{
@@ -80,8 +123,9 @@ socketClient.on("sendProducts", data=>{
     .catch((err)=> console.log(err))
 })
 
+
 socketClient.on("MensajesAlBrowser", mensajes =>{
-    console.log(mensajes)
+    
     fetch('templates/chat.handlebars')
     .then(string => string.text())
     .then(template =>{

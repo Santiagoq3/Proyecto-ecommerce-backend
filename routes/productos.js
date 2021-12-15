@@ -1,29 +1,21 @@
 import {Router, request, response} from "express";
 
-// const {contenedor} = require('../App')
 import Contenedor from "../models/Contenedor.js";
-import { socketsController } from "../sockets/socketsController.js";
 
 const path = "./db/productos.json"
-const contenedor = new Contenedor(path, [] );
-
+const contenedor = new Contenedor(path, [], "productos" );
 
 export  const router = Router();
-
 
 router.get("/", async(req,res)=>{
 
     const productos = await contenedor.getAll()
 
-    // res.status(200).json({
-    //     msg: "ok get productos",
-    //     productos
-    // })
-    
     res.render("Productos", {
         style: "productos.css",
         productos: productos
     })
+
    
 })
 
@@ -45,26 +37,31 @@ router.get("/:id", async(req,res)=>{
         msg: "ok get productos por id",
         productos
     })
-    await socketsController()
 })
 
 router.post("/", async(req = request,res)=>{
 
 
     let title = req.body.title
-    let precio = req.body.precio
+    let price = req.body.price
     let thumbnail = req.body.thumbnail
+  
+    // if(!title || !precio || !stock || !codigo){
+    //     return res.status(400).json({
+    //         msg: "el titulo, precio, stock y codigo son obligatorios"
+    //     })
+    // }
 
     console.log(title)
 
-    const producto = {
+    const data = {
         title,
-        precio,
-        thumbnail,
+        price,
+        thumbnail: "null",
+        
     }
 
-    await contenedor.save(producto)
-
+    await contenedor.save(data)
 
     res.status(200).json({
         msg: "Creado y guardado correctamente",
@@ -81,7 +78,6 @@ router.put("/:id", async(req,res)=>{
     const {...resto} = req.body
     
     await contenedor.actualizar(id,resto)
-
 
     res.status(200).json({
         msg: "actualizado correctamente",

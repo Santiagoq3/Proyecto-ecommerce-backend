@@ -3,8 +3,8 @@
 {{#each mensajes}}
 
     <div class="mensajes">
-        <p class="mensajes__email">{{this.inputEmail}} <span>[{{this.fecha}} - {{this.hora}}]</span></p>
-        <p class="mensajes__mensaje">dice:{{this.inputMensaje}}</p>
+        <p class="mensajes__email">{{this.email}} <span>[{{this.created_at}} - {{this.hora}}]</span></p>
+        <p class="mensajes__mensaje">dice:{{this.mensaje}}</p>
     </div>
 {{/each }}
 {{/if}}

@@ -1,53 +1,35 @@
-import fs from "fs"
+import { database_mysql } from "../db/dbConfig.js";
 
 export default class Contenedor {
 
-    constructor(nombreArchivo, productos = [], producto) {
+    constructor(nombreArchivo, productos = [], tabla) {
 
         this.nombreArchivo = nombreArchivo;
         this.productos = productos;
 
+        this.database = database_mysql,
+        this.tabla = tabla
+
+    
     }
 
     async save(objeto) {
 
-        const data = await fs.promises.readFile(this.nombreArchivo, "utf-8");
-
-        this.productos = JSON.parse(data);
-
-        objeto.id = this.productos.length + 1
-        this.productos.push(objeto)
-            // objeto.id = data.length + 1
         try {
-
-            await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(this.productos))
-
+            
+            let result = await this.database.table(this.tabla).insert(objeto)
+           
+            return result
         } catch (error) {
          console.log("no se pudo guardar", error)
         }
     }
+
     async actualizar(id, ...resto) {
-
-        const data = await fs.promises.readFile(this.nombreArchivo, "utf-8");
-         this.productos = JSON.parse(data);
-
-        this.productos =  this.productos.map(producto => {
-
-             if( producto.id === id){
-               producto = {
-                   ...resto,
-                   id
-               }
-             }
-
-             return producto
-         })
-
-         console.log(this.productos)
 
         try {
 
-            await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(this.productos))
+             await this.database(this.tabla).update(...resto).where("id", id);
 
         } catch (error) {
          console.log("no se pudo guardar", error)
@@ -57,10 +39,9 @@ export default class Contenedor {
     async getById(id) {
         try {
 
-            const data = await fs.promises.readFile(this.nombreArchivo, "utf-8");
-            const productos = JSON.parse(data);
+            const data = await this.database.select().table(this.tabla).where("id", id).first()
 
-            return productos.filter(producto => producto.id === id)
+            return data
 
         } catch (error) {
             console.log(error)
@@ -71,9 +52,7 @@ export default class Contenedor {
 
         try {
 
-            const data = await fs.promises.readFile(this.nombreArchivo, {encoding: "utf-8"});
-            const productos = JSON.parse(data);
-
+            const productos = await this.database.select().table(this.tabla)
             return productos
 
         } catch (error) {
@@ -84,12 +63,7 @@ export default class Contenedor {
 
         try {
 
-            const data = await fs.promises.readFile(this.nombreArchivo, "utf-8");
-
-            const productos = JSON.parse(data);
-
-            this.productos = productos.filter(producto => producto.id !== id)
-            await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(this.productos))
+          await this.database(this.tabla).del().where("id", id)
 
         } catch (error) {
 
@@ -99,9 +73,7 @@ export default class Contenedor {
 
    async deleteAll() {
 
-        this.productos = [];
-        
-        await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(this.productos))
+        await this.database(this.tabla).del()
     }
 
 }

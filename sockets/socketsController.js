@@ -1,24 +1,35 @@
-import fs, { fstat } from "fs"
 import Contenedor from "../models/Contenedor.js";
+import Mensajes from "../models/Mensajes.js";
+
 const path = "./db/productos.json"
-const contenedor = new Contenedor(path, [] );
+const contenedor = new Contenedor(path, [], "productos" );
+
+const mensajesService = new Mensajes("mensajes");
 
 export  const socketsController = async (client) =>{
     
-    let mensajes = JSON.parse(fs.readFileSync("./db/mensajes.json")) 
+    let mensajes = await  mensajesService.obtenerMensajes()
     const  productos =   await contenedor.getAll()
-    client.emit("sendProducts", productos)
 
-    client.on("sendMensaje", data =>{
-        console.log(data)
-        mensajes.push(data)
-        fs.writeFileSync("./db/mensajes.json", JSON.stringify(mensajes))
-        client.broadcast.emit("MensajesAlBrowser", mensajes)
+    client.emit("productosAlBrowser", productos)
+    client.emit("MensajesAlBrowser", mensajes)
+    client.on("sendProducts", async (dataProducts, callback) =>{
+        const  productos =   await contenedor.getAll()
+
+        client.broadcast.emit("productosAlBrowser", productos)
+
+        callback()
     })
 
-   
+    client.on("sendMensaje",async (data, callback) =>{
         
-    
+         const result = await mensajesService.guardarMensajes(data);
+        mensajes = await  mensajesService.obtenerMensajes()
+        client.broadcast.emit("MensajesAlBrowser", mensajes)
+
+        callback()
+    })
+
 }
 
 
