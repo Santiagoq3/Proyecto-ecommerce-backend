@@ -6,7 +6,6 @@ const btnChat = document.querySelector(".btnChat")
 
 const form = document.querySelector(".formProducto")
 
-console.log("hola mundo")
 
 function renderizarProducto (producto){
     const div = document.createElement("div");
@@ -83,22 +82,38 @@ btnPOST.addEventListener("click", function(e){
 
 btnChat.addEventListener("click", function(e){
 
-    e.preventDefault()
+    e.preventDefault();
+
     const inputEmail = document.querySelector(".inputEmail")
     const inputMensaje = document.querySelector(".inputMensaje")
+    const inputNombre = document.querySelector(".inputNombre")
+    const inputApellido = document.querySelector(".inputApellido")
+    const inputEdad = document.querySelector(".inputEdad")
+    const inputAlias = document.querySelector(".inputAlias")
+    const inputAvatar = document.querySelector(".inputAvatar")
 
     if(inputEmail.value.length < 5){
         throw new Error("el email es necesario")
     }
 
     const mensajes = {
-        email: inputEmail.value,
-        mensaje: inputMensaje.value,
+        
+
+        author: {
+            email: inputEmail.value,
+            nombre:   inputNombre.value,
+            apellido: inputApellido.value,
+            edad:     inputEdad.value,
+            alias:    inputAlias.value,
+            avatar:   inputAvatar.value
+        },
+        mensaje: inputMensaje.value
         
 
     }
-    
+    console.log(mensajes)
     socketClient.emit("sendMensaje", mensajes, function(){
+        console.log(mensajes)
         renderizarMensaje(mensajes)
 
     } )
@@ -108,7 +123,7 @@ btnChat.addEventListener("click", function(e){
 
 
 socketClient.on("productosAlBrowser", data=>{
-
+    console.log("la datita", data)
     fetch('templates/allProducts.handlebars')
     .then(string => string.text())
     .then(template =>{
@@ -125,7 +140,7 @@ socketClient.on("productosAlBrowser", data=>{
 
 
 socketClient.on("MensajesAlBrowser", mensajes =>{
-    
+    console.log("los mensajitos", mensajes)
     fetch('templates/chat.handlebars')
     .then(string => string.text())
     .then(template =>{

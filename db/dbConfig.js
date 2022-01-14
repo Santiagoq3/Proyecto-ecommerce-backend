@@ -18,3 +18,14 @@ export const database_mysql = knex({
     },
     pool: {min:0,max:10}
 })
+
+
+export const mongodbConfig = {
+    connection : process.env.MONGODB_CNN,
+    options: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+    }
+}
+

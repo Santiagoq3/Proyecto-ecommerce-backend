@@ -1,38 +1,66 @@
-import {database} from "../db/dbConfig.js"
+import {database_mysql} from "../db/dbConfig.js"
+
+import fs from "fs"
 
 export default class Mensajes{
-    constructor(tabla){
+    constructor(nombreArchivo){
 
 
-        this.database = database,
-        this.tabla = tabla
+       this.nombreArchivo = nombreArchivo
 
-        this.database.schema.hasTable(this.tabla)
-        .then((result) =>{
-            if(!result){
-                this.database.schema.createTable(this.tabla, table =>{
-                    table.increments();
-                    table.string("email").notNullable();
-                    table.string("mensaje").notNullable();
-                    table.timestamps(true,true);
-
-                })
-                .then((result)=> console.log("tabla creada!"))
-            }
-        } )
+      
     }
 
-   async obtenerMensajes(){
-        const mensajes = await this.database.select().table(this.tabla);
+    async insert(objeto,codigoData= "") {
 
-        return mensajes
+        const data = await fs.promises.readFile(this.nombreArchivo, "utf-8");
+
+        this.productos = JSON.parse(data);
+
+        objeto.id = this.productos.length + 1
+        this.productos.push(objeto)
+        try {
+
+            await fs.promises.writeFile(this.nombreArchivo, JSON.stringify(this.productos))
+
+        } catch (error) {
+         console.log("no se pudo guardar", error)
+        }
+
     }
 
-    async guardarMensajes(data){
+    async getAll() {
+
+        try {
+
+            const data = await fs.promises.readFile(this.nombreArchivo, {encoding: "utf-8"});
+            const mensajes = JSON.parse(data);
+
+            return mensajes
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+//    async obtenerMensajes(){
+//         const mensajes = await this.database.select().table(this.tabla);
+
+//         return mensajes
+//     }
+
+//     async guardarMensajes(data){
+
+//         try {
+            
+//             const mensajes = await this.database.table(this.tabla).insert(data);
+
+//             return mensajes
+//         } catch (error) {
+//             console.log(error)
+//         }
         
-      const mensajes = await this.database.table(this.tabla).insert(data);
 
-      return mensajes
-    }
+//     }
 
 }

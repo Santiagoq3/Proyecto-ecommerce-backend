@@ -7,6 +7,9 @@ import {Server} from "socket.io";
 import {socketsController}  from "../sockets/socketsController.js";
 import {router} from '../routes/productos.js'
 
+import faker from 'faker'
+faker.locale = 'es'
+
 export default class ServerExpress{
     constructor(){
         this.app  = express();
@@ -37,6 +40,25 @@ export default class ServerExpress{
             res.render("Formulario.handlebars")
           
         })
+
+ 
+
+    this.app.get('/api/productos-test', (req, res) => {
+        const productosMax = 5
+        const productos = []
+        for (let i = 1; i <= productosMax; i++) {
+            const prod = {
+                id: i,
+                title: faker.commerce.product(),
+                price: faker.commerce.price(),
+                thumbnail: `${faker.image.imageUrl()}?${i}`
+            }
+            
+            productos.push(prod)
+        }
+        res.json(productos)
+})
+
         this.sockets()
     }
 
