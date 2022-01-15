@@ -6,6 +6,10 @@ const btnChat = document.querySelector(".btnChat")
 
 const form = document.querySelector(".formProducto")
 
+const schemaAuthor = new normalizr.schema.Entity('author', {}, { idAttribute: 'id' });
+const schemaMensaje = new normalizr.schema.Entity('post', { author: schemaAuthor }, { idAttribute: '_id' })
+const schemaMensajes = new normalizr.schema.Entity('posts', { mensajes: [schemaMensaje] }, { idAttribute: 'id' })
+
 
 function renderizarProducto (producto){
     const div = document.createElement("div");
@@ -120,8 +124,6 @@ btnChat.addEventListener("click", function(e){
 
 })
 
-
-
 socketClient.on("productosAlBrowser", data=>{
     console.log("la datita", data)
     fetch('templates/allProducts.handlebars')
@@ -138,15 +140,22 @@ socketClient.on("productosAlBrowser", data=>{
     .catch((err)=> console.log(err))
 })
 
+socketClient.on("MensajesAlBrowser", ({mensajes,normalizados}) =>{
+    
+        let mensajesNormalizadosLength = JSON.stringify(normalizados).length
+        let mensajesDes = normalizr.denormalize(normalizados.result, schemaMensajes, normalizados.entities)
+        let mensajesDesLength = JSON.stringify(mensajesDes).length
+        let porcentaje= parseInt((mensajesNormalizadosLength * 100) / mensajesDesLength)
 
-socketClient.on("MensajesAlBrowser", mensajes =>{
-    console.log("los mensajitos", mensajes)
     fetch('templates/chat.handlebars')
     .then(string => string.text())
     .then(template =>{
         const processedTemplate = Handlebars.compile(template);
+
+    
         const templateObjects ={
-            mensajes
+            mensajes,
+            porcentaje
         }
         const html = processedTemplate(templateObjects)
         const chat = document.querySelector(".chat");

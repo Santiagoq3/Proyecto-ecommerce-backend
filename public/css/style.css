@@ -115,3 +115,7 @@ button{
     color: green;
     font-style: italic;
 }
+
+.chat__compresion{
+    font-size: 1.25rem;
+}

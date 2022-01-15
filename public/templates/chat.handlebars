@@ -1,9 +1,10 @@
 
+<div class="chat__compresion">CHAT - Porcentaje de compresion: {{porcentaje}}%</div>
 {{#if mensajes}}
 {{#each mensajes}}
 
     <div class="mensajes">
-        <p class="mensajes__email">{{this.email}} <span>[{{this.created_at}} - {{this.hora}}]</span></p>
+        <p class="mensajes__email">{{this.author.email}} <span>[{{this.created_at}} - {{this.hora}}]</span></p>
         <p class="mensajes__mensaje">dice:{{this.mensaje}}</p>
     </div>
 {{/each }}
