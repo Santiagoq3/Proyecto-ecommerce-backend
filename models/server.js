@@ -6,6 +6,14 @@ import { createServer } from "http";
 import {Server} from "socket.io";
 import {socketsController}  from "../sockets/socketsController.js";
 import {router} from '../routes/productos.js'
+import { routerAuth } from "../routes/auth.js";
+
+import mongoose from 'mongoose'
+
+
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
 
 import faker from 'faker'
 faker.locale = 'es'
@@ -15,8 +23,20 @@ export default class ServerExpress{
         this.app  = express();
         this.PORT = 8080;
 
+        this.productosPath= "/api/productos"
+        this.authPath= "/api/auth"
 
+        
+        this.baseSession = (session({
+            store:MongoStore.create({mongoUrl: process.env.MONGODB_SESSIONS}),
+            resave:false,
+            saveUninitialized:false,
+            secret:"CoderChat"
+        }))
+
+        this.conectarBaseDeDatos()
         this.middlewares()
+
 
         this.app.engine('handlebars',engine({
             defaultLayout: false,
@@ -27,7 +47,6 @@ export default class ServerExpress{
         this.app.set('view engine','handlebars')
         
         
-        this.productosPath= "/api/productos"
         
         this.httpServer = createServer(this.app);
         this.io = new Server(this.httpServer, {
@@ -74,11 +93,35 @@ export default class ServerExpress{
 
         this.app.use(cors())
 
+        this.app.use(this.baseSession);
+
     }
+
+    async conectarBaseDeDatos(){
+
+        
+        try {
+                await mongoose.connect(process.env.MONGODB_CNN, {
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true,
+                })
+                console.log("Base de datos conectada a mongodb");
+            }catch (error) {
+                console.log(error);
+                throw new Error('error en la base de datos')
+            }
+                
+           
+    }
+        
+ 
+        
+    
 
     routes(){
 
         this.app.use(this.productosPath, router);
+        this.app.use(this.authPath, routerAuth);
     
     }
 
