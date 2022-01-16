@@ -37,6 +37,10 @@ export default class ServerExpress{
         this.routes()
 
         this.app.get("/", (req,res)=>{
+            res.render("RegisterAndLogin.handlebars")
+          
+        })
+        this.app.get("/main", (req,res)=>{
             res.render("Formulario.handlebars")
           
         })

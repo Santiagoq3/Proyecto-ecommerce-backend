@@ -15,9 +15,6 @@ const schemaMensajes = new schema.Entity('posts', { mensajes: [schemaMensaje] },
 const normalizarMensajes = (mensajes) => normalize(mensajes, schemaMensajes)
 
 
-
-
-
 export  const socketsController = async (client) =>{
     
     let mensajes = await  mensajesService.getAll()
