@@ -3,12 +3,25 @@ const socketClient = io()
 
 const btnPOST = document.querySelector(".btnPOST")
 const btnChat = document.querySelector(".btnChat")
+const btnlogout = document.getElementById("logout")
+
+
+
 
 const form = document.querySelector(".formProducto")
 
 const schemaAuthor = new normalizr.schema.Entity('author', {}, { idAttribute: 'id' });
 const schemaMensaje = new normalizr.schema.Entity('post', { author: schemaAuthor }, { idAttribute: '_id' })
 const schemaMensajes = new normalizr.schema.Entity('posts', { mensajes: [schemaMensaje] }, { idAttribute: 'id' })
+
+
+let correo = "";
+fetch("http://localhost:8080/api/auth/currentuser")
+.then((res)=>{
+ return res.json()
+})
+.then((data)=>{ correo = data.correo})
+.catch((err) => console.log(err))
 
 
 function renderizarProducto (producto){
@@ -96,9 +109,9 @@ btnChat.addEventListener("click", function(e){
     const inputAlias = document.querySelector(".inputAlias")
     const inputAvatar = document.querySelector(".inputAvatar")
 
-    if(inputEmail.value.length < 5){
-        throw new Error("el email es necesario")
-    }
+    // if(inputEmail.value.length < 5){
+    //     throw new Error("el email es necesario")
+    // }
 
     const mensajes = {
         
@@ -155,7 +168,8 @@ socketClient.on("MensajesAlBrowser", ({mensajes,normalizados}) =>{
     
         const templateObjects ={
             mensajes,
-            porcentaje
+            porcentaje,
+            correo
         }
         const html = processedTemplate(templateObjects)
         const chat = document.querySelector(".chat");

@@ -16,6 +16,7 @@ import MongoStore from "connect-mongo";
 
 
 import faker from 'faker'
+import { verificarLogeado } from "../middlewares/verficarLogeado.js";
 faker.locale = 'es'
 
 export default class ServerExpress{
@@ -31,7 +32,10 @@ export default class ServerExpress{
             store:MongoStore.create({mongoUrl: process.env.MONGODB_SESSIONS}),
             resave:false,
             saveUninitialized:false,
-            secret:"CoderChat"
+            secret:"CoderChat",
+            cookie: {
+                maxAge: 1200000
+            }
         }))
 
         this.conectarBaseDeDatos()
@@ -59,7 +63,8 @@ export default class ServerExpress{
             res.render("RegisterAndLogin.handlebars")
           
         })
-        this.app.get("/main", (req,res)=>{
+        this.app.get("/main", verificarLogeado,(req,res)=>{
+            console.log(req.session)
             res.render("Formulario.handlebars")
           
         })

@@ -4,7 +4,7 @@
 {{#each mensajes}}
 
     <div class="mensajes">
-        <p class="mensajes__email">{{this.author.email}} <span>[{{this.created_at}} - {{this.hora}}]</span></p>
+        <p class="mensajes__email">{{correo}} <span>[{{this.created_at}} - {{this.hora}}]</span></p>
         <p class="mensajes__mensaje">dice:{{this.mensaje}}</p>
     </div>
 {{/each }}

@@ -1,4 +1,5 @@
 import {Router, request, response} from "express";
+import { verificarLogeado } from "../middlewares/verficarLogeado.js";
 
 import Contenedor from "../models/Contenedor.js";
 
@@ -7,7 +8,7 @@ const contenedor = new Contenedor(path, [], "productos" );
 
 export  const router = Router();
 
-router.get("/", async(req,res)=>{
+router.get("/", verificarLogeado,async(req,res)=>{
 
     const productos = await contenedor.getAll()
 

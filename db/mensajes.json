@@ -1,15 +1,1 @@
-[
-    {
-        "author": {
-            "email": "quipildorsantiago@gmail.com",
-            "nombre": "Santiago",
-            "apellido": "Quipildor",
-            "edad": "20",
-            "alias": "santy",
-            "avatar": "dasdasd"
-        },
-        "mensaje": "hola!",
-        "created_at": "15/1/2022 17:03:03",
-        "id": 1
-    }
-]
+[{"author":{"email":"quipildorsantiago@gmail.com","nombre":"Santiago","apellido":"Quipildor","edad":"20","alias":"santy","avatar":"dasdasd"},"mensaje":"hola!","created_at":"15/1/2022 17:03:03","id":1},{"author":{"email":"","nombre":"","apellido":"","edad":"","alias":"","avatar":""},"mensaje":"como estas pana?","created_at":"19/1/2022 20:18:35","id":2}]
