@@ -5,9 +5,6 @@ const btnPOST = document.querySelector(".btnPOST")
 const btnChat = document.querySelector(".btnChat")
 const btnlogout = document.getElementById("logout")
 
-
-
-
 const form = document.querySelector(".formProducto")
 
 const schemaAuthor = new normalizr.schema.Entity('author', {}, { idAttribute: 'id' });
