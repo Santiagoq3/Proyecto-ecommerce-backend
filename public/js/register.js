@@ -40,3 +40,11 @@ formLogin.addEventListener('submit',function(event){
         location.replace('http://localhost:8080/main')
     })
 })
+
+const btnFacebook = document.querySelector("#btnFacebook")
+
+
+btnFacebook.addEventListener("click", function(){
+
+    location = "http://localhost:8080/api/auth/facebook"
+})

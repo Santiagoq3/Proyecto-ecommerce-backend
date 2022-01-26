@@ -17,6 +17,8 @@ import MongoStore from "connect-mongo";
 
 import faker from 'faker'
 import { verificarLogeado } from "../middlewares/verficarLogeado.js";
+import passport from "passport";
+import initializePassportConfig from "../passport.config.js";
 faker.locale = 'es'
 
 export default class ServerExpress{
@@ -39,6 +41,7 @@ export default class ServerExpress{
         }))
 
         this.conectarBaseDeDatos()
+        this.passport()
         this.middlewares()
 
 
@@ -100,6 +103,14 @@ export default class ServerExpress{
 
         this.app.use(this.baseSession);
 
+        this.app.use(passport.initialize())
+
+        this.app.use(passport.session())
+
+    }
+
+    passport(){
+        initializePassportConfig()
     }
 
     async conectarBaseDeDatos(){

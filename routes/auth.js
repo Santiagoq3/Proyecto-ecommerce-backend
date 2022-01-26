@@ -1,4 +1,5 @@
 import {Router, request, response} from "express";
+import passport from "passport";
 import Usuario from "../models/usuario.js";
 
 
@@ -50,4 +51,20 @@ routerAuth.get('/logout', (req, res) => {
 
 routerAuth.get('/currentUser',(req,res)=>{
     res.send(req.session.user)
+})
+
+
+routerAuth.get('/facebook',passport.authenticate("facebook"),(req,res)=>{
+    
+})
+
+
+routerAuth.get('/facebook/callback',passport.authenticate("facebook", {
+    failureRedirect: "/paginadefail"
+}),(req,res)=>{
+
+    res.status(200).json({
+        msg: "logeado"
+    })
+    
 })
