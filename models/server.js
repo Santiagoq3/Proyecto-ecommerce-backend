@@ -36,7 +36,7 @@ export default class ServerExpress{
             saveUninitialized:false,
             secret:"CoderChat",
             cookie: {
-                maxAge: 60000
+                maxAge: 120000
             }
         }))
 

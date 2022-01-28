@@ -54,17 +54,17 @@ routerAuth.get('/currentUser',(req,res)=>{
 })
 
 
-routerAuth.get('/facebook',passport.authenticate("facebook"),(req,res)=>{
-    
+routerAuth.get('/facebook',passport.authenticate("facebook",{scope:["email"]}),(req,res)=>{
+    console.log(req.session)
+})
+
+routerAuth.get("/logged",(req,res)=>{
+    res.render("Formulario.handlebars")
+  
 })
 
 
 routerAuth.get('/facebook/callback',passport.authenticate("facebook", {
+    successRedirect: "/logged",
     failureRedirect: "/paginadefail"
-}),(req,res)=>{
-
-    res.status(200).json({
-        msg: "logeado"
-    })
-    
-})
+}))
