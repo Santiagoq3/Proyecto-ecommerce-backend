@@ -50,21 +50,22 @@ routerAuth.get('/logout', (req, res) => {
 })
 
 routerAuth.get('/currentUser',(req,res)=>{
-    res.send(req.session.user)
+
+    if (req.isAuthenticated()) return res.status(200).send(req.user)
+    if (req.session) return res.status(200).send(req.session.user)
+    return res.status(400).send({ status: 'Error', message: 'No hay usuario logeado.' })
+    
 })
 
 
 routerAuth.get('/facebook',passport.authenticate("facebook",{scope:["email"]}),(req,res)=>{
-    console.log(req.session)
-})
-
-routerAuth.get("/logged",(req,res)=>{
-    res.render("Formulario.handlebars")
-  
 })
 
 
 routerAuth.get('/facebook/callback',passport.authenticate("facebook", {
-    successRedirect: "/logged",
     failureRedirect: "/paginadefail"
-}))
+}), (req,res)=>{
+    console.log(req.session)
+    res.render("Formulario.handlebars")
+})
+

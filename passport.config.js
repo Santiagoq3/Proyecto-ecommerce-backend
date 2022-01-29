@@ -15,7 +15,7 @@ const initializePassportConfig = ()=>{
 
         clientID: "660671848623637",
         clientSecret: "3b6cdd30e1396445b0630d949406c36f",
-        callbackURL: "https://cc35-190-230-167-54.ngrok.io/api/auth/facebook/callback",
+        callbackURL: "https://d707-190-230-167-54.ngrok.io/api/auth/facebook/callback",
         profileFields: ["emails"]
 
     },async(accesToken,refreshToken, profile, done)=>{

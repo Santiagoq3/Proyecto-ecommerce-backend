@@ -9,3 +9,10 @@ export function verificarLogeado(req = request, res, next) {
         next()
     }
 }
+export function verificarPassport(req = request, res, next) {
+    if (req.isAuthenticated()) {
+        next()
+    } else {
+        res.redirect('/')
+    }
+}
