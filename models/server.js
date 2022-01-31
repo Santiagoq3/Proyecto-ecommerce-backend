@@ -69,7 +69,21 @@ export default class ServerExpress{
         //     res.render(path.join(process.cwd(), "/views/layouts/RegisterAndLogin.handlebars"));
         // })
 
- 
+        
+
+    this.app.get("/info", (req,res)=>{
+
+        const info = {
+            argv: process.argv,
+            execPath: process.execPath,
+            platform: process.platform,
+            processId: process.pid,
+            version: process.version,
+            projectDir: process.cwd(),
+            reservedMemory: process.memoryUsage().rss,
+          };
+          res.render(path.join(process.cwd(), "/views/layouts/Info.handlebars"), info)
+    })
 
     this.app.get('/api/productos-test', (req, res) => {
         const productosMax = 5
