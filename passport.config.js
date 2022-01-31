@@ -1,13 +1,8 @@
-
 import passport from "passport"
 import fbStrategy from "passport-facebook"
 import usuario from "./models/usuario.js";
 
-
-
 const facebookStrategy = fbStrategy.Strategy;
-
-
 
 const initializePassportConfig = ()=>{
 
@@ -31,7 +26,6 @@ const initializePassportConfig = ()=>{
            
             let user = await usuario.find({correo: profile.emails[0].value}).clone()
             
-            
             done(null,user)
         } catch (error) {
             done(error)
@@ -39,18 +33,14 @@ const initializePassportConfig = ()=>{
 
     } ))
 
-
 }
 
 passport.serializeUser((user,done)=>{
     done(null,user)
 })
 
-
 passport.deserializeUser(async(id,done)=>{
-//    await usuario.findById(id,done).clone()
     done(null,id)
 })
 
 export default initializePassportConfig;
-
