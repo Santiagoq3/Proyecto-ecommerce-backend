@@ -29,7 +29,7 @@ formLogin.addEventListener('submit',function(event){
         correo:info.get('correo'),
         password:info.get('password')
     }
-    fetch('/api/auth/login',{
+    fetch('/login',{
         method:"POST",
         body:JSON.stringify(sendObject),
         headers:{
@@ -37,7 +37,7 @@ formLogin.addEventListener('submit',function(event){
         }
     }).then(result=>result.json()).then(json=>{
         console.log(json);
-        location.replace('http://localhost:8080/main')
+        location.replace('http://localhost:3000/home')
     })
 })
 
@@ -46,5 +46,5 @@ const btnFacebook = document.querySelector("#btnFacebook")
 
 btnFacebook.addEventListener("click", function(){
 
-    location = "http://localhost:8080/api/auth/facebook"
+    location = "http://localhost:3000/facebook"
 })

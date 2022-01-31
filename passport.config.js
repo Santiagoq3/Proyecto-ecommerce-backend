@@ -15,8 +15,15 @@ const initializePassportConfig = ()=>{
 
         clientID: "660671848623637",
         clientSecret: "3b6cdd30e1396445b0630d949406c36f",
-        callbackURL: "https://d707-190-230-167-54.ngrok.io/api/auth/facebook/callback",
-        profileFields: ["emails"]
+        callbackURL: "https://9739-190-230-167-54.ngrok.io/facebook/callback",
+        profileFields: [
+            "id",
+            "picture.type(large)",
+            "emails",
+            "name",
+            "age_range",
+            "displayName",
+          ],
 
     },async(accesToken,refreshToken, profile, done)=>{
 
@@ -41,8 +48,7 @@ passport.serializeUser((user,done)=>{
 
 
 passport.deserializeUser(async(id,done)=>{
-//    await usuario.findById(id,done)
-    console.log("este es el id",id)
+//    await usuario.findById(id,done).clone()
     done(null,id)
 })
 

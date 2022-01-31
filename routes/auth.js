@@ -1,9 +1,14 @@
 import {Router, request, response} from "express";
 import passport from "passport";
 import Usuario from "../models/usuario.js";
+import path from "path"
 
 
 export  const routerAuth = Router();
+
+routerAuth.get("/", (_, res) => {
+    res.redirect("/home");
+  });
 
 routerAuth.post("/register", async(req,res)=>{
 
@@ -24,16 +29,17 @@ routerAuth.post("/login", async(req = request,res)=>{
     if(!usuario) return res.status(404).send({msg:"usuario no encontrado"});
     // if(usuario.password !== password) return res.status(400).json({msg:"contraseña incorrecta", usuario,password});
     const [data] = usuario
-    req.session.user={
-        nombre: data.nombre,
-        correo: data.correo
-    }
+    req.session.name= data.nombre
+    req.session.correo= data.correo
+        
+    
     res.json({status:"logeado"})
+    
    
 })
 
 routerAuth.get('/logout', (req, res) => {
-    if(req.session?.user.nombre){
+    
 
 
         req.session.destroy((err)=>{
@@ -44,7 +50,7 @@ routerAuth.get('/logout', (req, res) => {
             res.redirect('/')
         })
 
-    }
+    
 
        
 })
@@ -65,7 +71,20 @@ routerAuth.get('/facebook',passport.authenticate("facebook",{scope:["email"]}),(
 routerAuth.get('/facebook/callback',passport.authenticate("facebook", {
     failureRedirect: "/paginadefail"
 }), (req,res)=>{
-    console.log(req.session)
-    res.render("Formulario.handlebars")
+    const [user] = req.user
+    req.session.name = user.nombre;
+    req.session.correo = user.correo;
+    res.redirect("/");
 })
+
+
+
+routerAuth.get("/login", (req, res) => {
+    const name = req.session?.name;
+    if (name) {
+      res.redirect("/");
+    } else {
+      res.render(path.join(process.cwd(), "/views/layouts/RegisterAndLogin.handlebars"));
+    }
+  });
 

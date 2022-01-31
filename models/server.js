@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors"
 import {engine} from "express-handlebars";
-// const path = require("path")
+import path from "path";
 import { createServer } from "http";
 import {Server} from "socket.io";
 import {socketsController}  from "../sockets/socketsController.js";
@@ -19,12 +19,15 @@ import faker from 'faker'
 import { verificarLogeado } from "../middlewares/verficarLogeado.js";
 import passport from "passport";
 import initializePassportConfig from "../passport.config.js";
+import __dirname from "../utils/utils.js";
+import { routerHome } from "../routes/home.js";
 faker.locale = 'es'
 
 export default class ServerExpress{
     constructor(){
+
         this.app  = express();
-        this.PORT = 8080;
+        this.PORT = 3000;
 
         this.productosPath= "/api/productos"
         this.authPath= "/api/auth"
@@ -62,15 +65,9 @@ export default class ServerExpress{
 
         this.routes()
 
-        this.app.get("/", (req,res)=>{
-            res.render("RegisterAndLogin.handlebars")
-          
-        })
-        this.app.get("/main", verificarLogeado,(req,res)=>{
-            console.log(req.session)
-            res.render("Formulario.handlebars")
-          
-        })
+        // this.app.get("*", (req,res)=>{
+        //     res.render(path.join(process.cwd(), "/views/layouts/RegisterAndLogin.handlebars"));
+        // })
 
  
 
@@ -137,7 +134,8 @@ export default class ServerExpress{
     routes(){
 
         this.app.use(this.productosPath, router);
-        this.app.use(this.authPath, routerAuth);
+        this.app.use(routerAuth);
+        this.app.use(routerHome)
     
     }
 

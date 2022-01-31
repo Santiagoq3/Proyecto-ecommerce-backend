@@ -13,12 +13,12 @@ const schemaMensajes = new normalizr.schema.Entity('posts', { mensajes: [schemaM
 
 
 let correo = "";
-fetch("http://localhost:8080/api/auth/currentuser")
-.then((res)=>{
- return res.json()
-})
-.then((data)=>{ correo = data.correo})
-.catch((err) => console.log(err))
+// fetch("http://localhost:3000/api/auth/currentuser")
+// .then((res)=>{
+//  return res.json()
+// })
+// .then((data)=>{ correo = data.correo})
+// .catch((err) => console.log(err))
 
 
 function renderizarProducto (producto){
@@ -61,7 +61,7 @@ btnPOST.addEventListener("click", function(e){
 
     e.preventDefault()
 
-    const url = "http://localhost:8080/api/productos/";
+    const url = "http://localhost:3000/api/productos/";
 
     let data = new FormData(form)
     let title=data.get('title');
