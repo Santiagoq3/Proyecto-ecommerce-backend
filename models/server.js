@@ -21,6 +21,7 @@ import passport from "passport";
 import initializePassportConfig from "../passport.config.js";
 import __dirname from "../utils/utils.js";
 import { routerHome } from "../routes/home.js";
+import { routerRandom } from "../routes/random.js";
 faker.locale = 'es'
 
 export default class ServerExpress{
@@ -150,6 +151,7 @@ export default class ServerExpress{
         this.app.use(this.productosPath, router);
         this.app.use(routerAuth);
         this.app.use(routerHome)
+        this.app.use(routerRandom)
     
     }
 
