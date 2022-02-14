@@ -8,6 +8,9 @@ import {socketsController}  from "../sockets/socketsController.js";
 import {router} from '../routes/productos.js'
 import { routerAuth } from "../routes/auth.js";
 
+import core from "os"
+const cpusLength = core.cpus().length;
+
 import mongoose from 'mongoose'
 
 
@@ -70,8 +73,6 @@ export default class ServerExpress{
         //     res.render(path.join(process.cwd(), "/views/layouts/RegisterAndLogin.handlebars"));
         // })
 
-        
-
     this.app.get("/info", (req,res)=>{
 
         const info = {
@@ -82,6 +83,7 @@ export default class ServerExpress{
             version: process.version,
             projectDir: process.cwd(),
             reservedMemory: process.memoryUsage().rss,
+            cpusLength
           };
           res.render(path.join(process.cwd(), "/views/layouts/Info.handlebars"), info)
     })
@@ -127,7 +129,6 @@ export default class ServerExpress{
 
     async conectarBaseDeDatos(){
 
-        
         try {
                 await mongoose.connect(process.env.MONGODB_CNN, {
                     useNewUrlParser: true,
@@ -139,13 +140,8 @@ export default class ServerExpress{
                 throw new Error('error en la base de datos')
             }
                 
-           
     }
         
- 
-        
-    
-
     routes(){
 
         this.app.use(this.productosPath, router);
