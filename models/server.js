@@ -8,6 +8,8 @@ import {socketsController}  from "../sockets/socketsController.js";
 import {router} from '../routes/productos.js'
 import { routerAuth } from "../routes/auth.js";
 
+import compression from "compression"
+
 import core from "os"
 const cpusLength = core.cpus().length;
 
@@ -25,7 +27,11 @@ import initializePassportConfig from "../passport.config.js";
 import __dirname from "../utils/utils.js";
 import { routerHome } from "../routes/home.js";
 import { routerRandom } from "../routes/random.js";
+import { gzip } from "zlib";
+import { createLogger } from "../winston.js";
 faker.locale = 'es'
+
+const logger = createLogger();
 
 export default class ServerExpress{
     constructor(){
@@ -73,7 +79,9 @@ export default class ServerExpress{
         //     res.render(path.join(process.cwd(), "/views/layouts/RegisterAndLogin.handlebars"));
         // })
 
-    this.app.get("/info", (req,res)=>{
+    this.app.get("/info",(req,res)=>{
+
+        logger.log("info", "esto es un info")
 
         const info = {
             argv: process.argv,
@@ -103,6 +111,15 @@ export default class ServerExpress{
         }
         res.json(productos)
 })
+    this.app.get("*", (req,res)=>{
+
+        logger.log("warn", "GET- ruta no existe");
+
+
+        res.json({
+            msg: "ruta inexistente"
+        })
+    })
 
         this.sockets()
     }
@@ -120,6 +137,8 @@ export default class ServerExpress{
         this.app.use(passport.initialize())
 
         this.app.use(passport.session())
+
+        this.app.use(compression())
 
     }
 
