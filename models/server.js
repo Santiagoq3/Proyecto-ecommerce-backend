@@ -37,7 +37,6 @@ export default class ServerExpress{
     constructor(){
 
         this.app  = express();
-        this.PORT = 3000;
 
         this.productosPath= "/api/productos"
         this.authPath= "/api/auth"
@@ -177,8 +176,8 @@ export default class ServerExpress{
 
     listen(){
 
-        this.httpServer.listen(this.PORT, ()=>{
-            console.log(`servidor conectado en el puerto ${this.PORT}`)
+        this.httpServer.listen(process.env.PORT, ()=>{
+            console.log(`servidor conectado en el puerto ${process.env.PORT}`)
         })
         
     }
