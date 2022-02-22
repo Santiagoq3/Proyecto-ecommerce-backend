@@ -81,7 +81,7 @@ export default class ServerExpress{
 
     this.app.get("/info",(req,res)=>{
 
-        logger.log("info", "esto es un info")
+        logger.log("info", "esto es un infoo")
 
         const info = {
             argv: process.argv,
